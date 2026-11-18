@@ -22,10 +22,11 @@ st.set_page_config(
 
 
 # ==========================================
-# SISTEMA DE AUTENTICAÇÃO (SENHA DA DIRETORIA)
+# SISTEMA DE AUTENTICAÇÃO COM SESSÃO PERSISTENTE
+# (Mantém logado ao atualizar a página/F5)
 # ==========================================
 def check_password():
-  """Retorna True se o usuário inseriu a senha correta."""
+  """Retorna True se o usuário já estiver autenticado na sessão."""
   if st.session_state.get("password_correct", False):
     return True
 
@@ -45,8 +46,14 @@ def check_password():
       submit_login = st.form_submit_button("Entrar no Sistema")
 
       if submit_login:
-        # Senha de acesso da diretoria
-        if senha_digitada == "evomobile2026!":
+        # Lê a senha do st.secrets (nuvem) ou usa a senha padrão local
+        senha_correta = (
+            st.secrets["senha_diretoria"]
+            if "senha_diretoria" in st.secrets
+            else "evomobile2026!"
+        )
+
+        if senha_digitada == senha_correta:
           st.session_state["password_correct"] = True
           st.rerun()
         else:
@@ -55,14 +62,14 @@ def check_password():
   return False
 
 
-# Se a senha não estiver correta, interrompe e mostra apenas a tela de login
+# Se a senha não estiver correta na sessão, interrompe e exibe o login
 if not check_password():
   st.stop()
 # ==========================================
 
 
 # ==========================================
-# INÍCIO DO APP ORIGINAL (APÓS LOGIN CORRETO)
+# INÍCIO DO APP ORIGINAL (APÓS LOGIN)
 # ==========================================
 
 # Mapeamento Oficial de Consultores e E-mails da Evomobile
@@ -187,18 +194,17 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- BARRA LATERAL COM FOTO, NOME E LOGO PEQUENO ABAIXO ---
+# --- BARRA LATERAL COM FOTO, NOME E LOGO PEQUENO ---
 with st.sidebar:
   if os.path.exists("bruno.jpg"):
     st.image(
         "bruno.jpg",
-        caption="JOAO GIMENES- DIRETOR Evomobile",
+        caption="Bruno de Sousa Lima - Evomobile",
         use_container_width=True,
     )
 
   st.write("👤 **Gerência de Negócios / Evomobile**")
 
-  # Logo pequeno logo abaixo do nome e da foto
   if os.path.exists("evo.jpg"):
     st.image("evo.jpg", width=160)
 
