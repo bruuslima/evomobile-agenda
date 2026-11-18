@@ -187,7 +187,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- BARRA LATERAL COM FOTO E LOGO ---
+# --- BARRA LATERAL COM FOTO, NOME E LOGO PEQUENO ABAIXO ---
 with st.sidebar:
   if os.path.exists("bruno.jpg"):
     st.image(
@@ -196,12 +196,12 @@ with st.sidebar:
         use_container_width=True,
     )
 
-  # Logo pequeno logo abaixo da foto
-  if os.path.exists("evo.jpeg"):
-    st.image("evo.jpeg", width=160)
-
-  st.markdown("---")
   st.write("👤 **Gerência de Negócios / Evomobile**")
+
+  # Logo pequeno logo abaixo do nome e da foto
+  if os.path.exists("evo.jpg"):
+    st.image("evo.jpg", width=160)
+
   st.markdown("---")
 
 FILE_PATH = "reunioes.csv"
@@ -513,7 +513,7 @@ with aba_selecionada[2]:
       )
       nova_data = st.date_input("Data da Reunião:", value=date.today())
     with col_nc2:
-      novo_hora = st.time_input(
+      nova_hora = st.time_input(
           "Horário de Início:", value=datetime.strptime("09:00", "%H:%M").time()
       )
       novo_link = st.text_input(
