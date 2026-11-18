@@ -192,7 +192,7 @@ with st.sidebar:
   if os.path.exists("bruno.jpg"):
     st.image(
         "bruno.jpg",
-        caption="Bruno de Sousa Lima - Evomobile",
+        caption="JOAO GIMENES- DIRETOR Evomobile",
         use_container_width=True,
     )
 
