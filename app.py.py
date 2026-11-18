@@ -45,7 +45,7 @@ def check_password():
       submit_login = st.form_submit_button("Entrar no Sistema")
 
       if submit_login:
-        # Senha de acesso da diretoria (ou use st.secrets se preferir)
+        # Senha de acesso da diretoria
         if senha_digitada == "evomobile2026!":
           st.session_state["password_correct"] = True
           st.rerun()
@@ -187,21 +187,19 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- BARRA LATERAL COM FOTO DO PERFIL ---
+# --- BARRA LATERAL COM FOTO E LOGO ---
 with st.sidebar:
   if os.path.exists("bruno.jpg"):
     st.image(
         "bruno.jpg",
-        caption="JOÃO GIMENES- DIRETOR Evomobile",
-        use_container_width=True, 
-
-
+        caption="Bruno de Sousa Lima - Evomobile",
+        use_container_width=True,
     )
-  else:
-    st.info(
-        "💡 Dica: Adicione o arquivo 'bruno.jpg' na pasta do projeto para exibir"
-        " a foto."
-    )
+
+  # Logo pequeno logo abaixo da foto
+  if os.path.exists("evo.jpeg"):
+    st.image("evo.jpeg", width=160)
+
   st.markdown("---")
   st.write("👤 **Gerência de Negócios / Evomobile**")
   st.markdown("---")
@@ -252,7 +250,7 @@ def salvar_dados(df_novo):
   df_novo.to_csv(FILE_PATH, index=False)
 
 
-# Função segura para disparo de e-mail (compatível com Windows e Nuvem)
+# Função segura para disparo de e-mail
 def enviar_email_consultor(destinatario, consultor, titulo, data, hora, link):
   if not WINDOWS_SYSTEM:
     print(
@@ -515,7 +513,7 @@ with aba_selecionada[2]:
       )
       nova_data = st.date_input("Data da Reunião:", value=date.today())
     with col_nc2:
-      nova_hora = st.time_input(
+      novo_hora = st.time_input(
           "Horário de Início:", value=datetime.strptime("09:00", "%H:%M").time()
       )
       novo_link = st.text_input(
