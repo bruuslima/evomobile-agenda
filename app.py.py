@@ -22,14 +22,22 @@ st.set_page_config(
 
 
 # ==========================================
-# SISTEMA DE AUTENTICAÇÃO COM SESSÃO PERSISTENTE
-# (Mantém logado ao atualizar a página/F5)
+# SISTEMA DE AUTENTICAÇÃO PERSISTENTE (F5 PROTETOR)
 # ==========================================
 def check_password():
-  """Retorna True se o usuário já estiver autenticado na sessão."""
+  """Verifica se o usuário já está autenticado na sessão ou via parâmetro."""
+
+  # 1. Verifica se já está na session_state
   if st.session_state.get("password_correct", False):
     return True
 
+  # 2. Verifica se a URL já possui o selo de autenticação (evita pedir senha no F5)
+  query_params = st.query_params
+  if query_params.get("auth") == "true":
+    st.session_state["password_correct"] = True
+    return True
+
+  # Tela de login
   st.markdown("""
         <div style='text-align: center; padding: 40px 0;'>
             <h1>🔒 EVOMOBILE | ACESSO RESTRITO</h1>
@@ -46,7 +54,7 @@ def check_password():
       submit_login = st.form_submit_button("Entrar no Sistema")
 
       if submit_login:
-        # Lê a senha do st.secrets (nuvem) ou usa a senha padrão local
+        # Senha de acesso da diretoria (lê do st.secrets se houver, senão usa a padrão)
         senha_correta = (
             st.secrets["senha_diretoria"]
             if "senha_diretoria" in st.secrets
@@ -55,6 +63,8 @@ def check_password():
 
         if senha_digitada == senha_correta:
           st.session_state["password_correct"] = True
+          # Adiciona o parâmetro na URL para o F5 não derrubar a sessão
+          st.query_params["auth"] = "true"
           st.rerun()
         else:
           st.error("❌ Senha incorreta. Acesso negado.")
@@ -62,7 +72,7 @@ def check_password():
   return False
 
 
-# Se a senha não estiver correta na sessão, interrompe e exibe o login
+# Se a senha não estiver correta, interrompe e exibe o login
 if not check_password():
   st.stop()
 # ==========================================
@@ -199,7 +209,7 @@ with st.sidebar:
   if os.path.exists("bruno.jpg"):
     st.image(
         "bruno.jpg",
-        caption="Bruno de Sousa Lima - Evomobile",
+        caption="JOAO GIMENES- DIRETOR EVOMOBILE",
         use_container_width=True,
     )
 
